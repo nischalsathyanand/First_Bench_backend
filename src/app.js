@@ -1,12 +1,26 @@
 import cors from "cors";
-import express from "express";
-import scriptData from "../data/scriptData.js";
 import NodeCache from "node-cache";
 import cron from "node-cron";
 import fs from "fs";
+const express = require("express");
 
+const mongoose = require("mongoose");
+
+//const saltRounds = 10;
 const app = express();
 app.use(cors());
+app.use(express.json());
+// mongodb connections
+mongoose.connect("mongodb://localhost:27017/firstbench", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("Connected to MongoDB");
+});
+
 const port = process.env.PORT || 3000;
 
 // Initialize NodeCache
@@ -111,11 +125,9 @@ app.get("/api/v1/getscriptbyname", async (req, res) => {
 
     const cachedData = cache.get("scripts");
     if (!cachedData) {
-      return res
-        .status(404)
-        .json({
-          error: "Data not available in cache. Please try again later.",
-        });
+      return res.status(404).json({
+        error: "Data not available in cache. Please try again later.",
+      });
     }
 
     //const script = cachedData.find(item => item.name === name);
@@ -196,3 +208,7 @@ cron.schedule("0 */1 * * *", async () => {
     console.error("Error refreshing cache:", error);
   }
 });
+
+// add user router
+let users = require("../router/users");
+app.use("/users", users);
