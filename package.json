@@ -45,6 +45,8 @@
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
-    "rxdb": "^15.10.0"
+    "otplib": "^12.0.1",
+    "rxdb": "^15.10.0",
+    "smartapi-javascript": "^1.0.22"
   }
 }

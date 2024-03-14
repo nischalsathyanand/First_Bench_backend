@@ -3,7 +3,7 @@ import NodeCache from "node-cache";
 import cron from "node-cron";
 import fs from "fs";
 const express = require("express");
-
+import { connect } from "./middleware/smartAPI";
 const mongoose = require("mongoose");
 
 //const saltRounds = 10;
@@ -189,6 +189,12 @@ app.get("/api/v1/getdetails", async (req, res) => {
     console.error("Error fetching script details:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+//smart Api
+
+app.post("/api/v1/smartapi", connect, async (req, res) => {
+  res.json({ hiii: "helloo" });
 });
 
 // Schedule cache refresh every 1 hours
